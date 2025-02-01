@@ -8,7 +8,7 @@ load_dotenv()
 BASE_API_URL = "https://api.langflow.astra.datastax.com"
 LANGFLOW_ID = ""
 FLOW_ID = ""
-APPLICATION_TOKEN = os.environ.get("APP_TOKEN")
+APPLICATION_TOKEN = os.environ.get("APP_TOKEN", "") # Added default empty string
 ENDPOINT = "customer" # The endpoint name of the flow
 
 
@@ -27,7 +27,8 @@ def run_flow(message: str) -> dict:
     headers = {"Authorization": "Bearer " + APPLICATION_TOKEN, "Content-Type": "application/json"}
     
     # Make POST request to API
-    response = requests.post(api_url, json=payload, headers=headers)
+    #response = requests.post(api_url, json=payload, headers=headers)
+    #return response.json()
     
     # Return parsed JSON response
     return {
