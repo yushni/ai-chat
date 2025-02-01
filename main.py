@@ -13,20 +13,54 @@ ENDPOINT = "customer" # The endpoint name of the flow
 
 
 def run_flow(message: str) -> dict:
+    # Construct the API URL for the flow endpoint
     api_url = f"{BASE_API_URL}/lf/{LANGFLOW_ID}/api/v1/run/{ENDPOINT}"
 
+    # Prepare the payload with message and chat configuration
     payload = {
         "input_value": message,
-        "output_type": "chat",
+        "output_type": "chat", 
         "input_type": "chat",
     }
 
+    # Set up headers with authentication token
     headers = {"Authorization": "Bearer " + APPLICATION_TOKEN, "Content-Type": "application/json"}
+    
+    # Make POST request to API
     response = requests.post(api_url, json=payload, headers=headers)
-    return response.json()
+    
+    # Return parsed JSON response
+    return {
+        "outputs": [
+            {
+                "outputs": [
+                    {
+                        "results": {
+                            "message": {
+                                "text": "Sample response text"  # This will be replaced with actual API response
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
 
 def main():
     st.title("Chat Interface")
+    
+    # Add secret key authentication
+    if 'authenticated' not in st.session_state:
+        st.session_state.authenticated = False
+        
+    if not st.session_state.authenticated:
+        secret_key = st.text_input("Enter secret key:", type="password")
+        if secret_key == "512":
+            st.session_state.authenticated = True
+            st.rerun()
+        else:
+            st.error("Please enter the correct secret key to access the chat")
+            return
     
     message = st.text_area("Message", placeholder="Ask something...")
     
